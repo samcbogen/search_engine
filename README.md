@@ -45,11 +45,13 @@ Your tasks are to:
    all the buttons on the webpage should work without giving you any error messages,
    but there won't be any data displayed when you search.
 
-1. Run the script
+1. Edit the script `scripts/check_web_endpoints.sh` so that the port that the script connects to matches the port that the flask server is exposed to on the `docker-compose.overrider.yml` file.
+
+   Then, run the script
    ```
    $ sh scripts/check_web_endpoints.sh
    ```
-   to perform automated checks that the system is running correctly.
+   to perform automated integration checks that the system is running correctly.
    All tests should report `[pass]`.
 
 ## Task 2: loading data
