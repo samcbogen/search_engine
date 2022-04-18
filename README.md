@@ -1,5 +1,7 @@
 # HW: Search Engine
 
+**Due date:** Wednesday 27 April (no collaboration extension possible)
+
 In this assignment you will create a highly scalable web search engine.
 
 **Learning Objectives:**
