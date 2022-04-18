@@ -2,8 +2,6 @@
 
 In this assignment you will create a highly scalable web search engine.
 
-**Due Date:** Sunday, 9 May
-
 **Learning Objectives:**
 1. Learn to work with a moderate large software project
 1. Learn to parallelize data analysis work off the database
@@ -15,11 +13,14 @@ In this assignment you will create a highly scalable web search engine.
 1. Fork this github repo, and clone your fork onto the lambda server
 
 1. Ensure that you'll have enough free disk space by:
-    1. bring down any running docker containers
-    1. run the command
-       ```
-       $ docker system prune
-       ```
+    1. delete the contents of the databases in your `$HOME/bigdata` folder by
+        1. see the instructions in the `twitter_postgres_indexes` repo
+    1. delete your named volumes by
+        1. bringing down any running docker containers
+        1. run the command
+           ```
+           $ docker system prune
+           ```
 
 ## Task 1: getting the system running
 
@@ -122,6 +123,7 @@ In this task, you will implement and run the `download_host` service for downloa
    ```
    to insert the urls from these 5 hostnames.
 
+<!--
 ## ~~Task 3: speeding up the webpage~~
 
 Since everyone seems pretty overworked right now,
@@ -130,6 +132,7 @@ I've done this step for you.
 There are two steps:
 1. create indexes for the fast text search
 1. create materialized views for the `count(*)` queries
+-->
 
 ## Submission
 
