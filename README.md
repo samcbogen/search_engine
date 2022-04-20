@@ -9,6 +9,7 @@ In this assignment you will create a highly scalable web search engine.
 1. Learn to parallelize data analysis work off the database
 1. Learn to work with WARC files and the multi-petabyte common crawl dataset
 1. Increase familiarity with indexes and rollup tables for speeding up queries
+1. Learn to debug database performance problems
 
 ## Task 0: project setup
 
