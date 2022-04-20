@@ -153,15 +153,67 @@ In this task, you will implement and run the `downloader_host` service for downl
    ```
    to insert the urls from these 5 hostnames.
 
-## ~~Task 3: speeding up the webpage~~
+## Task 3: speeding up the webpage
 
+Every time you run a web search on this website, several sql queries are run.
+In particular, the full text search is run using a query that contains something like
+```
+to_tsvector() @@ to_tsquery()
+```
+in its where clause.
+There is currently no index to speed up this query.
+So the query will use a sequential scan and the runtime will be linear in the amount of data searched.
+
+That's bad!
+
+Your goal in this task is to create an index that speeds up the query.
+It should be a RUM index to speed up the `@@` operator and take advantage of a `LIMIT` clause using an index scan.
+The RUM index is already installed on this pg instance,
+and that's one of the reason building the images took a long time.
+
+The problem is that I'm not going to tell you what the query is that you need to speed up.
+And there's a LOT of code to try to search through... so it's impractical to find the python that causes this query.
+
+Instead, we'll use postgres to tell us what queries are slow without needing to search through the code.
+Postgres maintains a relation called `pg_stat_statements` which records the performance of all queries that get run.
+You can find a tutorial for using this relation at <https://www.cybertec-postgresql.com/en/postgresql-detecting-slow-queries-quickly/>.
+
+Running the following query in psql will give you the most expensive queries that have been run on the database:
+```
+SELECT query,
+      calls,
+      round(total_exec_time::numeric, 2) AS total_time,
+      round(mean_exec_time::numeric, 2) AS mean_time,
+      round((100 * total_exec_time / sum(total_exec_time) OVER ())::numeric, 2) AS percentage
+FROM pg_stat_statements
+ORDER BY total_exec_time DESC;
+```
+If you run this query, you'll see that it contains MANY results inside of it because there are many queries that have been run on the database.
+
+In order to find our text search query, modify the `SELECT` statement above to add a `WHERE` clause that requires that the query contain the `@@` symbol.
+Now you should see as the first result the `SELECT` query that does full text search on your webpage.
+You can verify this by running a few more queries on the webpage and checking that the `calls` column in the `SELECT` query goes up.
+
+Now that you know what the query looks like, write a RUM index to speed up this query.
+(One fact that you need which may not be included in the results of your `SELECT` query is that the language parameter to `to_tsquery` is `'simple'`.)
+
+Add this RUM index to your `services/pg/sql/schema.sql` file and run it directly in psql.
+You should notice when you run a search, the runtimes of the searches are now faster.
+
+<!--
 Since I've given out a lot of work at this point, I don't want to overwhelm you, and I've done this step for you.
 
 There are two steps:
 1. create indexes for the fast text search
 1. create materialized views for the `count(*)` queries
+-->
 
 ## Submission
+
+1. Edit this README file to contain the RUM query you created above right here:
+    ```
+    CREATE INDEX ...
+    ```
 
 1. Edit this README file with the results of the following queries in psql.
    The results of these queries will be used to determine if you've completed the previous steps correctly.
@@ -182,6 +234,7 @@ There are two steps:
        ```
 
 1. Take a screenshot of an interesting search result.
+   Ensure that the timer on the bottom of the webpage is included in the screenshot.
    Add the screenshot to your git repo, and modify the `<img>` tag below to point to the screenshot.
 
    <img src='screenshot.png' />

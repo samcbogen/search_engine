@@ -659,22 +659,6 @@ CREATE MATERIALIZED VIEW metahtml_rollup_insert AS (
     GROUP BY insert_hour
 );
 
-/* indexes for text search of the form
-
-SELECT
-    jsonb->'title'->'best'->>'value'
-FROM metahtml
-WHERE
-    spacy_tsvector(
-        jsonb->'language'->'best'->>'value',
-        jsonb->'title'->'best'->>'value'
-    ) @@ 
-    spacy_tsquery('en', 'covid');
-*/
-
-CREATE INDEX metahtml_title_rumidx ON metahtml USING rum (title) ;
-CREATE INDEX metahtml_content_rumidx ON metahtml USING rum (content) ;
-
 COMMIT;
 
 
