@@ -76,6 +76,7 @@ def process_cdx_url(connection, url, batch_size=100, source='cc', **kwargs):
             log.debug("url="+url)
 
             # FIXME: extract the metainfo using the metahtml library
+            # HINT: look how this is done in the downloader_warc.py file and copy that
             meta = None
             pspacy_title = None
             pspacy_content = None
