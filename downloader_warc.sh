@@ -12,8 +12,9 @@ hashid=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 cd services/downloader_warc
 docker build -t novichenko/downloader_warc .
 
+# process command line inputs
 warc=$1
-name=$(basename $(dirname $warc))
+name=$(basename $warc)
 echo "warc=$name"
 
 # launch the docker container

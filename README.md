@@ -16,7 +16,7 @@ In this assignment you will create a highly scalable web search engine.
 
 1. Ensure that you'll have enough free disk space by:
     1. delete the contents of the databases in your `$HOME/bigdata` folder by
-        1. see the instructions in the `twitter_postgres_indexes` repo
+        1. see the instructions in the `twitter_postgres_indexes` repo for deleting the contents of the folders created in those assignments
     1. delete your named volumes by
         1. bringing down any running docker containers
         1. run the command
@@ -35,11 +35,29 @@ There are three docker-compose files in this repo:
 
 Your tasks are to:
 
-1. Modify the `docker-compose.override.yml` file so that the port exposed by the flask service is different.
+1. Run the script `scripts/create_passwords.sh` to generate the file `.env.prod` containing production credentials for the database.
+    Recall that this file is sensitive and should not be added to your git repo for any reason.
 
-1. Run the script `scripts/create_passwords.sh` to generate a new production password for the database.
+1. Modify the `docker-compose.override.yml` file so that the port exposed by the flask service is the same as your userid.
 
-1. Build and bring up the docker containers.
+1. Build and bring up the docker containers by running the commands
+    ```
+    $ docker-compose build
+    $ docker-compose up -d
+    ```
+    Note that the containers have many dependencies,
+    and so building them the first time can take an hour or more.
+    Further recall that when the `-f` command line flag is not specified, then `docker-compose` will use both the `docker-compose.yml` and `docker-compose.override.yml` configuration files, but will not use the `docker-compose.prod.yml` configuration file.
+    For the purposes of this assignment, you won't need to use the production file.
+
+1. Verify that you can connect to your database by running the command:
+    ```
+    $ docker-compose exec pg psql --user=novichenko
+    ```
+
+    > **Historical Note:**
+    > Notice that the database username (as defined in the `.prod.env` file) is `novichenko` and not `postgres` or `root`.
+    > [Novichenko](https://en.wikipedia.org/wiki/One_Second_for_a_Feat) was a Soviet military officer who saved Kim Il Sung from a grenade assassination attempt.
 
 1. Enable ssh port forwarding so that your local computer can connect to the running flask app.
 
@@ -71,20 +89,30 @@ There are two important files in this service:
 1. `downloader_warc.sh` is a bash script that starts up a new docker container connected to the database, then runs the `downloader_warc.py` file inside that container
 
 Next follow these steps:
-1. Visit https://commoncrawl.org/the-data/get-started/
+1. Visit <https://commoncrawl.org/the-data/get-started/>
 1. Find the url of a WARC file.
    On the common crawl website, the paths to WARC files are referenced from the Amazon S3 bucket.
-   In order to get a valid HTTP url, you'll need to prepend `https://commoncrawl.s3.amazonaws.com/` to the front of the path.
+   In order to get a valid HTTP url, you'll need to prepend `https://data.commoncrawl.org/` to the front of the path.
 1. Then, run the command
    ```
    $ ./downloader_warc.sh $URL
    ```
    where `$URL` is the url to your selected WARC file.
-1. Run the command
+
+   This command will spawn a docker container that downloads the WARC file and inserts it into the database.
+   Run the command
    ```
    $ docker ps
    ```
    to verify that the docker container is running.
+   Since it is downloading and processing a 1GB file, this container will run for a long time.
+   Once the WARC file is fully downloaded, the container will automatically stop itself.
+
+   > **Note:**
+   > The first time this script is run, a docker image is built.
+   > Building this image takes a long time (potentially hours), and so the first run of this script will be slow.
+   > Subsequent runs do not have to rebuild the container from scratch and will be much faster.
+
 1. Repeat these steps to download at least 5 different WARC files, each from different years.
    Each of these downloads will spawn its own docker container and can happen in parallel.
 
@@ -107,11 +135,11 @@ In this task, you will implement and run the `downloader_host` service for downl
 1. The file `services/downloader_host/downloader_host.py` has 3 `FIXME` statements.
    You will have to complete the code in these statements to make the python script correctly insert WARC records into the database.
 
-   HINT:
-   The code will require that you use functions from the cdx_toolkit library.
-   You can find the documentation [here](https://pypi.org/project/cdx-toolkit/).
-   You can also reference the `downloader_warc` service for hints,
-   since this service accomplishes a similar task.
+   > **HINT:**
+   > The code will require that you use functions from the cdx_toolkit library.
+   > You can find the documentation [here](https://pypi.org/project/cdx-toolkit/).
+   > You can also reference the `downloader_warc` service for hints,
+   > since this service accomplishes a similar task.
 
 1. Run the query
    ```
@@ -125,16 +153,13 @@ In this task, you will implement and run the `downloader_host` service for downl
    ```
    to insert the urls from these 5 hostnames.
 
-<!--
 ## ~~Task 3: speeding up the webpage~~
 
-Since everyone seems pretty overworked right now,
-I've done this step for you.
+Since I've given out a lot of work at this point, I don't want to overwhelm you, and I've done this step for you.
 
 There are two steps:
 1. create indexes for the fast text search
 1. create materialized views for the `count(*)` queries
--->
 
 ## Submission
 
