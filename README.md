@@ -18,11 +18,11 @@ In this assignment you will create a highly scalable web search engine.
 1. Ensure that you'll have enough free disk space by:
     1. delete the contents of the databases in your `$HOME/bigdata` folder by
         1. see the instructions in the `twitter_postgres_indexes` repo for deleting the contents of the folders created in those assignments
-    1. delete your named volumes by
+    1. delete your named volumes and previously built docker images by
         1. bringing down any running docker containers
-        1. run the command
+        1. running the command
            ```
-           $ docker system prune
+           $ docker system prune -a
            ```
 
 ## Task 1: getting the system running
