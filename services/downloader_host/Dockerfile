@@ -68,6 +68,7 @@ RUN cd /tmp \
 
 # install metahtml; this requires the new version of git
 ADD https://api.github.com/repos/mikeizbicki/metahtml/git/refs/heads/master /tmp/metahtml.version
+RUN apt-get install -y libxml2-dev libxslt1-dev
 RUN cd /tmp \
  && git clone --filter=blob:none --no-checkout https://github.com/mikeizbicki/metahtml \
  && cd metahtml \
