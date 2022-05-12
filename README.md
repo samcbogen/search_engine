@@ -213,8 +213,7 @@ There are two steps:
 
 1. Edit this README file to contain the RUM query you created above right here:
     ```
-    CREATE INDEX metahtml_title_idx ON metahtml USING rum(title);
-    CREATE INDEX metahtml_content_idx ON metahtml USING rum(content);
+    CREATE INDEX metahtml_content_rum_idx ON metahtml USING rum(content);
     ```
 
 1. Edit this README file with the results of the following queries in psql.
@@ -223,23 +222,135 @@ There are two steps:
     1. This query shows the total number of webpages loaded:
        ```
        select count(*) from metahtml;
+       count  
+       --------
+       254363
+       (1 row)
        ```
 
     1. This query shows the number of webpages loaded / hour:
        ```
        select * from metahtml_rollup_insert order by insert_hour desc limit 100;
+       hll_count |  url   | hostpathquery | hostpath |  host  |      insert_hour       
+       -----------+--------+---------------+----------+--------+------------------------
+       1 |  14604 |         15427 |    13927 |  9805 | 2022-05-11 20:00:00+00
+       5 | 223380 |        207524 |   199958 | 153846 | 2022-05-11 19:00:00+00
+       (2 rows)
        ```
 
     1. This query shows the hostnames that you have downloaded the most webpages from:
        ```
        select * from metahtml_rollup_host2 order by hostpath desc limit 100;
+       url | hostpathquery | hostpath |             host             
+       -----+---------------+----------+------------------------------
+       117|           117 |      117 | com,popsugar)
+       96 |            96 |       96 | com,economist)
+       76 |            76 |       76 | com,mlb)
+       74 |            74 |       74 | com,tripadvisor)
+       73 |            73 |       73 | me,about)
+       73 |            73 |       73 | de,tripadvisor)
+       71 |            71 |       71 | com,zappos)
+       69 |            69 |       69 | com,imdb)
+       66 |            66 |       66 | edu,cornell,law)
+       64 |            64 |       64 | net,blogmarks)
+       68 |            68 |       62 | com,dpreview)
+       61 |            61 |       61 | tw,com,tripadvisor)
+       60 |            60 |       60 | com,theguardian)
+       59 |            59 |       59 | com,aol)
+       58 |            58 |       58 | com,fanatics)
+       63 |            63 |       56 | com,go,espn)
+       52 |            52 |       52 | com,scribd)
+       51 |            51 |       51 | com,imdb)
+       49 |            49 |       49 | com,smugmug,photos)
+       46 |            46 |       46 | com,si)
+       42 |            42 |       42 | it,ebay)
+       40 |            40 |       40 | com,merriam-webster)
+       38 |            38 |       38 | com,pandora)
+       38 |            38 |       38 | uk,co,expedia)
+       38 |            38 |       38 | com,seatgeek)
+       37 |            37 |       37 | com,photobucket)
+       36 |            36 |       36 | net,mbc)
+       36 |            36 |       36 | su,eti)
+       35 |            35 |       35 | com,foxnews)
+       34 |            34 |       34 | com,wanderu)
+       34 |            34 |       34 | org,wikipedia,en)
+       34 |            34 |       34 | com,iheart)
+       41 |            41 |       33 | com,audible)
+       32 |            32 |       32 | nl,tripadvisor)
+       32 |            32 |       32 | com,prezi)
+       32 |            32 |       32 | uk,co,myindex)
+       32 |            32 |       32 | com,remax)
+       32 |            32 |       32 | org,le-guide-sante)
+       32 |            32 |       32 | com,cargurus)
+       32 |            32 |       32 | com,gamefaqs)
+       31 |            31 |       31 | com,pinterest,id)
+       31 |            31 |       31 | com,allposters)
+       31 |            31 |       31 | com,taptap)
+       30 |            30 |       30 | org,worldcat)
+       30 |            30 |       30 | com,pixels)
+       29 |            29 |       29 | com,pixels)
+       29 |            29 |       29 | es,ebay)
+       29 |            29 |       29 | org,wikipedia,cs)
+       29 |            29 |       29 | org,wikipedia,pl)
+       29 |            29 |       29 | com,bendecho)
+       29 |            29 |       29 | com,bandtoband)
+       29 |            29 |       29 | org,wikipedia,nl)
+       29 |            29 |       29 | com,chicagotribune,articles)
+       29 |            29 |       29 | com,funnieordie)
+       29 |            29 |       29 | uk,co,huffingtonpost)
+       29 |            29 |       29 | com,rottentomatoes)
+       29 |            29 |       29 | gov,loc,chroniclingamerica)
+       29 |            29 |       29 | com,dailypuppy)
+       29 |            29 |       29 | com,dailykos)
+       29 |            29 |       29 | com,dailymotion)
+       28 |            28 |       28 | com,oracle,docs)
+       28 |            28 |       28 | com,cnet)
+       28 |            28 |       28 | com,sporcle)
+       28 |            28 |       28 | com,eventbrite)
+       28 |            28 |       28 | com,bleacherreport)
+       28 |            28 |       28 | com,wsj)
+       28 |            28 |       28 | com,go,abcnews)
+       28 |            28 |       28 | com,nytimes)
+       27 |            27 |       27 | id,co,tripadvisor)
+       27 |            27 |       27 | org,wikipedia,zh)
+       27 |            27 |       27 | ru,restoclub)
+       26 |            26 |       26 | org,opensubtitles)
+       26 |            26 |       26 | com,huffingtonpost)
+       26 |            26 |       26 | se,tripadvisor)
+       26 |            26 |       26 | uk,co,telegraph)
+       25 |            25 |       25 | com,forbes)
+       25 |            25 |       25 | com,gizmodo)
+       25 |            25 |       25 | de,europages)
+       24 |            24 |       24 | com,apnews)
+       23 |            23 |       23 | com,freecode)
+       23 |            23 |       23 | com,starpulse)
+       23 |            23 |       23 | com,insideflyer)
+       23 |            23 |       23 | org,phys)
+       23 |            23 |       23 | com,nordstrom,shop)
+       23 |            23 |       23 | com,vimeo)
+       23 |            23 |       23 | com,macys)
+       23 |            23 |       22 | org,sae)
+       22 |            22 |       22 | com,alibaba)
+       22 |            22 |       22 | com,latimes)
+       21 |            21 |       21 | com,webmd)
+       21 |            21 |       21 | com,reuters)
+       21 |            21 |       21 | com,books2read)
+       21 |            21 |       21 | com,apple,podcasts)
+       21 |            21 |       21 | com,twitter,mobile)
+       20 |            20 |       20 | org,bbb)
+       20 |            20 |       20 | com,usatoday)
+       19 |            19 |       19 | com,reuters,uk)
+       19 |            19 |       19 | com,google,docs)
+       19 |            19 |       19 | com,youtube)
+       19 |            19 |       19 | org,cnn)
+ (100 rows)
        ```
 
 1. Take a screenshot of an interesting search result.
    Ensure that the timer on the bottom of the webpage is included in the screenshot.
    Add the screenshot to your git repo, and modify the `<img>` tag below to point to the screenshot.
 
-   <img src='screenshot.png' />
+   <img src='screen_shot.png' />
 
 1. Commit and push your changes to github.
 
