@@ -342,7 +342,7 @@ There are two steps:
        19 |            19 |       19 | com,reuters,uk)
        19 |            19 |       19 | com,google,docs)
        19 |            19 |       19 | com,youtube)
-       19 |            19 |       19 | org,cnn)
+       19 |            19 |       19 | com,cnn)
  (100 rows)
        ```
 
