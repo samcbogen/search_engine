@@ -213,7 +213,8 @@ There are two steps:
 
 1. Edit this README file to contain the RUM query you created above right here:
     ```
-    CREATE INDEX ...
+    CREATE INDEX metahtml_title_idx ON metahtml USING rum(title);
+    CREATE INDEX metahtml_content_idx ON metahtml USING rum(content);
     ```
 
 1. Edit this README file with the results of the following queries in psql.
