@@ -660,7 +660,6 @@ CREATE MATERIALIZED VIEW metahtml_rollup_insert AS (
 );
 
 
-CREATE INDEX metahtml_title_idx ON metahtml USING rum(title);
-CREATE INDEX metahtml_content_idx ON metahtml USING rum(content);
+CREATE INDEX metahtml_content_rum_idx ON metahtml USING rum(content);
 
 COMMIT;
